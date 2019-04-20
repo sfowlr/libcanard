@@ -349,6 +349,9 @@ def generate_one_type(template_expander, t):  # noqa: C901 (flake8 doesn't under
         for a in attributes:
             if a.type.category == t.CATEGORY_PRIMITIVE and a.type.kind == a.type.KIND_FLOAT and a.bitlen == 16:
                 has_float16 = True
+            elif a.type.category == t.CATEGORY_ARRAY and a.type.value_type.category == t.CATEGORY_PRIMITIVE:
+                if a.type.value_type.kind == a.type.value_type.KIND_FLOAT and a.bitlen == 16:
+                    has_float16 = True
         return has_float16
 
     if t.kind == t.KIND_MESSAGE:

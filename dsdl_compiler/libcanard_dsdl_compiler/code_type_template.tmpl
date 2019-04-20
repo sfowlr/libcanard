@@ -109,7 +109,17 @@ uint32_t ${type_name}_encode_internal(${type_name}* source,
     // Static array (${f.name})
     for (c = 0; c < ${f.array_size}; c++)
     {
+                %if f.type_category == t.CATEGORY_ARRAY and f.type.value_type.category == t.CATEGORY_PRIMITIVE and f.cpp_type == "float" and f.bitlen == 16
+// float16 special handling
+#ifndef CANARD_USE_FLOAT16_CAST
+        tmp_float = canardConvertNativeFloatToFloat16(source->${f.name}[c]);
+#else
+        tmp_float = (CANARD_USE_FLOAT16_CAST)source->${f.name}[c];
+#endif
+        canardEncodeScalar(msg_buf, offset, ${f.bitlen}, (void*)&tmp_float); // ${f.max_size}
+                %else
         canardEncodeScalar(msg_buf, offset, ${f.bitlen}, (void*)(source->${f.name} + c)); // ${f.max_size}
+                %endif
         offset += ${f.bitlen};
     }
             %endif
