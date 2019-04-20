@@ -49,3 +49,4 @@ dsdlc_generated/
 
 # Pycache
 __pycache__/
+*.pyc
